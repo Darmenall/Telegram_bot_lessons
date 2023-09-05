@@ -1,0 +1,28 @@
+import asyncio
+
+from aiogram import types
+
+from data.config import ADMINS
+from loader import dp, db, bot
+
+
+@dp.message_handler(text="/allusers", user_id=ADMINS)
+async def get_all_users(message: types.Message):
+    users = db.select_all_users()
+    for user in users:
+        await message.answer(user[1])
+
+
+@dp.message_handler(text="/reklama", user_id=ADMINS)
+async def send_ad_to_all(message: types.Message):
+    users = db.select_all_users()
+    for user in users:
+        user_id = user[0]
+        await bot.send_message(chat_id=user_id, text="inst: darmen_all layk basip ketin!")
+        await asyncio.sleep(0.05)  # bir waqitta 10 sms limit sol ushin
+
+
+@dp.message_handler(text="/cleandb", user_id=ADMINS)
+async def get_all_users(message: types.Message):
+    db.delete_users()
+    await message.answer("Baza tazalandi!")
